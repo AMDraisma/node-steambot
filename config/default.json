@@ -1,9 +1,9 @@
 {
   // Steambot login and sentry file stuff
-	"Login": {
+	"login": {
     	"username": "user",
 		"password": ""
-    }
+    },
 	"sentryfile": {
 		"location": "./.sentry"
 	}
