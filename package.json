@@ -1,0 +1,21 @@
+{
+	"name": "node-steambot",
+	"version": "0.0.1",
+	"homepage": "https://croil.net/dota",
+	"description": "A simple steam bot that acquires the serverID a dota player is playing on",
+	"author": "Crude Oil <crude@croil.net>",
+	"main": "steambot.js",
+	"dependencies" : {
+		"steam": "1.4.x",
+		"colors": "1.1.x",
+		"steam-resources": "https://github.com/seishun/node-steam-resources.git#v1.0.0"
+	},
+	"repository" : {
+		"type" : "git",
+		"url" : "https://github.com/AMDraisma/node-steambot"
+	},
+	"bugs" : {
+		"url" : "https://github.com/AMDraisma/node-steambot/issues",
+		"email" : "crude@croil.net"
+	}
+}
