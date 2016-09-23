@@ -44,10 +44,10 @@ function log(type, message) {
 		case LogType.Warning:
 			console.log(Colors.yellow("*WARN*: " + message));
 			break;
-		case LogType.Info:
+		case LogType.Errr:
 			console.log(Colors.orange("≡ERRR≡: " + message));
 			break;
-		case LogType.Info:
+		case LogType.Critical:
 			console.log(Colors.red("☼CRIT☼: " + message));
 			break;
 		case LogType.Chat:
@@ -167,13 +167,16 @@ steamClient.on('logOnResponse', function(response) {
 			initPersonaStates();
 			break;
 		case Steam.EResult.Fail:
-			log(LogType.Info, "Logon failed");
+			log(LogType.Critical, "Logon failed: Unknown reason");
 			break;
 		case Steam.EResult.NoConnection:
-			log(LogType.Info, "Logon failed: No connection");
+			log(LogType.Error, "Logon failed: No connection");
 			break;
 		case Steam.EResult.InvalidPassword:
-			log(LogType.Info, "Logon failed: Wrong password");
+			log(LogType.Error, "Logon failed: Wrong password");
+			break;
+		case Steam.EResult.PasswordUnset:
+			log(LogType.Error, "Password not set. Did you forget to change config/default.json?");
 			break;
 		case Steam.EResult.AccountLogonDenied:
 			log(LogType.Info, "Authcode required");
