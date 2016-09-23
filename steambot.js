@@ -1,8 +1,11 @@
 var Colors = require('colors/safe');
-var Steam = require('steam');
-var SteamResources = require('steam-resources');
 var readline = require('readline');
 var fs = require('fs');
+var config = require('config');
+
+var Steam = require('steam');
+var SteamResources = require('steam-resources');
+
 
 var rl = readline.createInterface({
 	input: process.stdin,
@@ -15,9 +18,8 @@ var steamFriends = new Steam.SteamFriends(steamClient);
 var steamGameCoordinator = new Steam.SteamGameCoordinator(steamClient, 570);
 var steamRichPresence = new Steam.SteamRichPresence(steamClient, 570);
 
-// TODO: Config or something
-var accountName = ""
-var pass = ""
+var username = config.get('login.username');
+var password = config.get('login.password');
 var authcode = undefined;
 
 
@@ -61,8 +63,9 @@ function log(type, message) {
 
 function tryReadSentryFile() {
 	var result;
-	fs.access("./.sentry", fs.constants.R_OK | fs.constants.W_OK, (err) => {
-		result = err ? undefined : fs.readFileSync("./.sentry");
+	var sentryfile = config.get('sentryfile.location');
+	fs.access(sentryfile, fs.R_OK | fs.W_OK, (err) => {
+		result = err ? undefined : fs.readFileSync(sentryfile);
 	});
 	return result;
 }
@@ -123,11 +126,15 @@ function initInterface() {
 
 steamClient.on('connected', function() {
 	log(LogType.Info, "Connected to steam, logging in...");
+	var sentry_sha = tryReadSentryFile();
+	if (sentry_sha != undefined ) {
+		log(LogType.Info, "Sentry file found.");
+	}
 	steamUser.logOn({
-		account_name: accountName,
-		password: pass,
+		account_name: username,
+		password: password,
 		auth_code: authcode,
-		steamguard_dont_remember_computer: true
+		sha_sentryfile: sentry_sha
 	});
 });
 
@@ -141,7 +148,7 @@ steamClient.on('error', function() { });
 
 steamClient.on('sentry', function(sentry) {
 	log(LogType.Info, "Sentry file received. Saving...");
-	fs.writeFileSync("./.sentry", sentry);
+	fs.writeFileSync(config.get('sentryfile.location'), sentry);
 });
 
 steamClient.on('logOnResponse', function(response) {
